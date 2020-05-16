@@ -6,5 +6,13 @@ multi arch os osquery travisci pipeline
 
 ~~~~
 
+https://brew.sh/
+
+https://chocolatey.org/
+
+https://scoop.sh/
+
+https://osquery.io/
+
 https://osquery.io/
 ~~~~
