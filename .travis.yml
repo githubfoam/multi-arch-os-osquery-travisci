@@ -1,0 +1,315 @@
+---
+sudo: required
+
+env:
+  global:
+  - VAGRANT_VERSION="2.2.9"
+notifications:
+  slack:
+    on_failure: always
+
+fleet_script_osquery_win_tasks : &fleet_script_osquery_win_tasks
+      script:
+          - echo "============================================="
+          - echo "=============Installing Osquery=============="
+          - choco install osquery --params='/InstallService' #This creates a new windows service that will auto-start the daemon.
+          # - Start-Service osqueryd
+          - echo "============================================="
+fleet_script_osquery_macos_tasks : &fleet_script_osquery_macos_tasks
+      script:
+          - echo "============================================="
+          - echo "=============Installing Osquery=============="
+          - brew update
+          - brew install osquery
+          # - /usr/local/bin/osqueryi
+          - echo "=============Post installation steps==============" #https://osquery.readthedocs.io/en/stable/installation/install-macos/
+          - sudo ls -lai /var
+          # - sudo ln -s /var/osquery /usr/local/share/osquery
+          # - sudo mkdir /var/log/osquery
+          - sudo ls -lai /usr/local/Cellar/osquery
+          # - sudo chown root /usr/local/Cellar/osquery/1.7.3/bin/osqueryd
+          # - sudo cp /var/osquery/osquery.example.conf /var/osquery/osquery.conf
+          - echo "============================================="
+fleet_script_osquery_tasks : &fleet_script_osquery_tasks
+      script:
+          - echo "============================================="
+          - echo "=============Installing Osquery debian=============="
+          - export OSQUERY_KEY=1484120AC4E9F8A1A577AEEE97A80C63C9D8B80B
+          - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $OSQUERY_KEY
+          - sudo add-apt-repository 'deb [arch=amd64] https://pkg.osquery.io/deb deb main'
+          - sudo apt update && sudo apt install osquery -y
+          - sudo osqueryctl start osqueryd
+          - sudo osqueryctl status osqueryd
+          - echo "============================================="
+fleet_script_tasks : &fleet_script_tasks
+      script:
+        - python --version
+fleet_install_tasks : &fleet_install_tasks
+      install:
+        - pip install -r requirements.txt
+
+
+matrix:
+  fast_finish: true
+  include:
+
+    - name: "Python 3.7 on bionic amd64"
+      os: linux
+      arch: amd64
+      dist: bionic
+      language: python
+      python: 3.7
+      # env:
+      #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+      # compiler:
+      #  - gcc
+      #  - clang
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_tasks
+      after_success:
+        - deactivate
+
+    # - name: "Python 3.7 on bionic arm64" #Unable to locate package osquery
+    #   os: linux
+    #   arch: arm64
+    #   dist: bionic
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+    #
+    # - name: "Python 3.7 on bionic ppc64le" #Unable to locate package osquery
+    #   os: linux
+    #   arch: ppc64le
+    #   dist: bionic
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+    #
+    # - name: "Python 3.7 on bionic s390x" #Unable to locate package osquery
+    #   os: linux
+    #   arch: s390x
+    #   dist: bionic
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+
+    - name: "Python 3.7 on xenial amd64"
+      os: linux
+      arch: amd64
+      dist: xenial
+      language: python
+      python: 3.7
+      # env:
+      #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+      # compiler:
+      #  - gcc
+      #  - clang
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_tasks
+      after_success:
+        - deactivate
+
+
+
+    # - name: "Python 3.7 on xenial arm64" #Unable to locate package osquery
+    #   os: linux
+    #   arch: arm64
+    #   dist: xenial
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+    #
+    # - name: "Python 3.7 on xenial ppc64le" #Unable to locate package osquery
+    #   os: linux
+    #   arch: ppc64le
+    #   dist: xenial
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+    #
+    # - name: "Python 3.7 on xenial s390x" #Unable to locate package osquery
+    #   os: linux
+    #   arch: s390x
+    #   dist: xenial
+    #   language: python
+    #   python: 3.7
+    #   # env:
+    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+    #   # compiler:
+    #   #  - gcc
+    #   #  - clang
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_tasks
+    #   after_success:
+    #     - deactivate
+
+
+    - name: "Python 2.7 on xenial"
+      os: linux
+      arch: amd64
+      dist: xenial
+      language: python
+      python: 2.7
+      before_install:
+        - pip install virtualenv
+        - virtualenv -p $(which python2) ~venvpy2
+        - source ~venvpy2/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_tasks
+      after_success:
+        - deactivate
+
+
+    - name: "Python 2.7.17 on macOS xcode10.2"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+      before_install:
+        - pip install virtualenv
+        - virtualenv -p $(which python2) ~venvpy2
+        - source ~venvpy2/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_macos_tasks
+      after_success:
+        - deactivate
+
+    - name: "Python 3.7.5 on macOS xcode10.2"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_macos_tasks
+      after_success:
+        - deactivate
+
+    - name: "Python 3.7.5 on macOS xcode9.4 "
+      os: osx
+      osx_image: xcode9.4
+      language: shell
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_macos_tasks
+      after_success:
+        - deactivate
+
+    - name: "Python 3.8 on Windows"
+      os: windows
+      language: shell
+      env:
+        - PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      before_install:
+        - choco install python --version 3.8.1
+        - pip install virtualenv
+        - virtualenv $HOME/venv
+        - source $HOME/venv/Scripts/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_win_tasks
+      after_success:
+        - deactivate
+
+    - name: "Python 3.7 on Windows"
+      os: windows
+      language: shell
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+      before_install:
+        - choco install python --version 3.7.3
+        - python -m pip install virtualenv
+        - virtualenv $HOME/venv
+        - source $HOME/venv/Scripts/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_win_tasks
+      after_success:
+        - deactivate
