@@ -53,6 +53,27 @@ matrix:
   fast_finish: true
   include:
 
+    - name: "Python 3.7 on focal amd64"
+      os: linux
+      arch: amd64
+      dist: focal
+      language: python
+      python: 3.7
+      # env:
+      #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
+      # compiler:
+      #  - gcc
+      #  - clang
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_tasks
+      after_success:
+        - deactivate
+
     - name: "Python 3.7 on bionic amd64"
       os: linux
       arch: amd64
@@ -74,68 +95,6 @@ matrix:
       after_success:
         - deactivate
 
-    # - name: "Python 3.7 on bionic arm64" #Unable to locate package osquery
-    #   os: linux
-    #   arch: arm64
-    #   dist: bionic
-    #   language: python
-    #   python: 3.7
-    #   # env:
-    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-    #   # compiler:
-    #   #  - gcc
-    #   #  - clang
-    #   before_install:
-    #     - pip3 install virtualenv
-    #     - virtualenv -p $(which python3) ~venvpy3
-    #     - source ~venvpy3/bin/activate
-    #   <<: *fleet_install_tasks
-    #   <<: *fleet_script_tasks
-    #   <<: *fleet_script_osquery_tasks
-    #   after_success:
-    #     - deactivate
-    #
-    # - name: "Python 3.7 on bionic ppc64le" #Unable to locate package osquery
-    #   os: linux
-    #   arch: ppc64le
-    #   dist: bionic
-    #   language: python
-    #   python: 3.7
-    #   # env:
-    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-    #   # compiler:
-    #   #  - gcc
-    #   #  - clang
-    #   before_install:
-    #     - pip3 install virtualenv
-    #     - virtualenv -p $(which python3) ~venvpy3
-    #     - source ~venvpy3/bin/activate
-    #   <<: *fleet_install_tasks
-    #   <<: *fleet_script_tasks
-    #   <<: *fleet_script_osquery_tasks
-    #   after_success:
-    #     - deactivate
-    #
-    # - name: "Python 3.7 on bionic s390x" #Unable to locate package osquery
-    #   os: linux
-    #   arch: s390x
-    #   dist: bionic
-    #   language: python
-    #   python: 3.7
-    #   # env:
-    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-    #   # compiler:
-    #   #  - gcc
-    #   #  - clang
-    #   before_install:
-    #     - pip3 install virtualenv
-    #     - virtualenv -p $(which python3) ~venvpy3
-    #     - source ~venvpy3/bin/activate
-    #   <<: *fleet_install_tasks
-    #   <<: *fleet_script_tasks
-    #   <<: *fleet_script_osquery_tasks
-    #   after_success:
-    #     - deactivate
 
     - name: "Python 3.7 on xenial amd64"
       os: linux
