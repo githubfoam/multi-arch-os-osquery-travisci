@@ -44,10 +44,13 @@ matrix:
   fast_finish: true
   include:
 
-    - name: "deploy osquery w homebrew on macOS 10.15.5 osx xcode12u"
+    - name: "deploy osquery w homebrew on macOS 10.14.6 osx xcode12u"
       os: osx
       osx_image: 
-        - xcode12u
+        - xcode11.3
+        # - xcode11.2
+        # - xcode11.1
+        # - xcode11
       addons:
         homebrew:
           packages:
@@ -65,44 +68,66 @@ matrix:
       after_success:
         - deactivate
 
-    - name: "Python 2.7.17 on macOS xcode10.2"
-      os: osx
-      osx_image: xcode10.2
-      language: shell
-      before_install:
-        - pip install virtualenv
-        - virtualenv -p $(which python2) ~venvpy2
-        - source ~venvpy2/bin/activate
-      <<: *fleet_install_tasks
-      <<: *fleet_script_tasks
-      <<: *fleet_script_osquery_macos_tasks
-      after_success:
-        - deactivate
+    # - name: "deploy osquery w homebrew on macOS 10.15.5 osx xcode12u"
+    #   os: osx
+    #   osx_image: 
+    #     - xcode12u
+    #   addons:
+    #     homebrew:
+    #       packages:
+    #       - osquery 
+    #       update: true
+    #   language: shell
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #     - python --version
+    #     - pip install -r requirements.txt
+    #   script:
+    #     - sudo osqueryctl start
+    #   after_success:
+    #     - deactivate
 
-    - name: "Python 3.7.5 on macOS xcode10.2"
-      os: osx
-      osx_image: xcode10.2
-      language: shell
-      before_install:
-        - pip3 install virtualenv
-        - virtualenv -p $(which python3) ~venvpy3
-        - source ~venvpy3/bin/activate
-      <<: *fleet_install_tasks
-      <<: *fleet_script_tasks
-      <<: *fleet_script_osquery_macos_tasks
-      after_success:
-        - deactivate
 
-    - name: "Python 3.7.5 on macOS xcode9.4 "
-      os: osx
-      osx_image: xcode9.4
-      language: shell
-      before_install:
-        - pip3 install virtualenv
-        - virtualenv -p $(which python3) ~venvpy3
-        - source ~venvpy3/bin/activate
-      <<: *fleet_install_tasks
-      <<: *fleet_script_tasks
-      <<: *fleet_script_osquery_macos_tasks
-      after_success:
-        - deactivate
+    # - name: "Python 2.7.17 on macOS xcode10.2"
+    #   os: osx
+    #   osx_image: xcode10.2
+    #   language: shell
+    #   before_install:
+    #     - pip install virtualenv
+    #     - virtualenv -p $(which python2) ~venvpy2
+    #     - source ~venvpy2/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_macos_tasks
+    #   after_success:
+    #     - deactivate
+
+    # - name: "Python 3.7.5 on macOS xcode10.2"
+    #   os: osx
+    #   osx_image: xcode10.2
+    #   language: shell
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_macos_tasks
+    #   after_success:
+    #     - deactivate
+
+    # - name: "Python 3.7.5 on macOS xcode9.4 "
+    #   os: osx
+    #   osx_image: xcode9.4
+    #   language: shell
+    #   before_install:
+    #     - pip3 install virtualenv
+    #     - virtualenv -p $(which python3) ~venvpy3
+    #     - source ~venvpy3/bin/activate
+    #   <<: *fleet_install_tasks
+    #   <<: *fleet_script_tasks
+    #   <<: *fleet_script_osquery_macos_tasks
+    #   after_success:
+    #     - deactivate
