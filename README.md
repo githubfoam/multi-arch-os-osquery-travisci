@@ -14,5 +14,4 @@ https://scoop.sh/
 
 https://osquery.io/
 
-https://osquery.io/
 ~~~~
