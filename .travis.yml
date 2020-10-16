@@ -5,7 +5,15 @@ notifications:
   slack:
     on_failure: always
 
-
+fleet_script_osquery_arm64_tasks : &fleet_script_osquery_arm64_tasks
+      script:
+          - echo "============================================="
+          - echo "=============Installing Osquery debian arm64=============="
+          - wget -q https://pkg.osquery.io/deb/osquery_4.5.1_1.linux.arm64.deb
+          - sudo dpkg -i osquery_4.5.1_1.linux.arm64.deb
+          - sudo osqueryctl start osqueryd
+          - sudo osqueryctl status osqueryd
+          - echo "=============================================" s
 fleet_script_osquery_tasks : &fleet_script_osquery_tasks
       script:
           - echo "============================================="
@@ -92,32 +100,31 @@ matrix:
         - pip3 install virtualenv
         - virtualenv -p $(which python3) ~venvpy3
         - source ~venvpy3/bin/activate
-      <<: *fleet_install_tasks
-      <<: *fleet_script_tasks
-      <<: *fleet_script_osquery_tasks
+      # <<: *fleet_install_tasks
+      # <<: *fleet_script_tasks
+      # <<: *fleet_script_osquery_tasks
+      script:
+        - sudo make deploy-linux-debian-amd64
       after_success:
         - deactivate
 
-    # - name: "Python 3.7 on bionic arm64" #Unable to locate package osquery
-    #   os: linux
-    #   arch: arm64
-    #   dist: bionic
-    #   language: python
-    #   python: 3.7
-    #   # env:
-    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-    #   # compiler:
-    #   #  - gcc
-    #   #  - clang
-    #   before_install:
-    #     - pip3 install virtualenv
-    #     - virtualenv -p $(which python3) ~venvpy3
-    #     - source ~venvpy3/bin/activate
-    #   <<: *fleet_install_tasks
-    #   <<: *fleet_script_tasks
-    #   <<: *fleet_script_osquery_tasks
-    #   after_success:
-    #     - deactivate
+    - name: "Python 3.7 on bionic arm64" 
+      os: linux
+      arch: arm64
+      dist: bionic
+      language: python
+      python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      # <<: *fleet_install_tasks
+      # <<: *fleet_script_tasks
+      # <<: *fleet_script_osquery_tasks
+      script:
+        - sudo make deploy-linux-debian-arm64
+      after_success:
+        - deactivate
     #
     # - name: "Python 3.7 on bionic ppc64le" #Unable to locate package osquery
     #   os: linux
@@ -167,11 +174,6 @@ matrix:
       dist: xenial
       language: python
       python: 3.7
-      # env:
-      #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-      # compiler:
-      #  - gcc
-      #  - clang
       before_install:
         - pip3 install virtualenv
         - virtualenv -p $(which python3) ~venvpy3
@@ -184,26 +186,21 @@ matrix:
 
 
 
-    # - name: "Python 3.7 on xenial arm64" #Unable to locate package osquery
-    #   os: linux
-    #   arch: arm64
-    #   dist: xenial
-    #   language: python
-    #   python: 3.7
-    #   # env:
-    #   #   - LIB_PATH="/usr/bin/shared/x86_64/v1"
-    #   # compiler:
-    #   #  - gcc
-    #   #  - clang
-    #   before_install:
-    #     - pip3 install virtualenv
-    #     - virtualenv -p $(which python3) ~venvpy3
-    #     - source ~venvpy3/bin/activate
-    #   <<: *fleet_install_tasks
-    #   <<: *fleet_script_tasks
-    #   <<: *fleet_script_osquery_tasks
-    #   after_success:
-    #     - deactivate
+    - name: "Python 3.7 on xenial arm64" 
+      os: linux
+      arch: arm64
+      dist: xenial
+      language: python
+      python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+      <<: *fleet_install_tasks
+      <<: *fleet_script_tasks
+      <<: *fleet_script_osquery_arm64_tasks
+      after_success:
+        - deactivate
     #
     # - name: "Python 3.7 on xenial ppc64le" #Unable to locate package osquery
     #   os: linux
