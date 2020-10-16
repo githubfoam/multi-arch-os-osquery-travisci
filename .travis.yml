@@ -27,27 +27,6 @@ matrix:
   fast_finish: true
   include:
 
-    - name: "deploy osquery Python on Windows"
-      os: windows
-      language: shell
-      env:
-        - PATH=/c/Python38:/c/Python38/Scripts:$PATH
-      before_install:
-        - choco install python
-        - pip install virtualenv
-        - virtualenv $HOME/venv
-        - source $HOME/venv/Scripts/activate
-        - python --version
-        - pip install -r requirements.txt
-      script:
-          - echo "============================================="
-          - echo "=============Installing Osquery=============="
-          - choco install osquery --params='/InstallService' #This creates a new windows service that will auto-start the daemon.
-          # - Start-Service osqueryd
-          - echo "============================================="      
-      after_success:
-        - deactivate
-
     - name: "deploy osquery Python 3.8.1 on Windows"
       os: windows
       language: shell
