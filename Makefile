@@ -1,9 +1,9 @@
 
 deploy-linux-debian-arm64:
-	bash scripts/deploy-linux-arm64.sh
+	bash scripts/deploy-linux-debian-arm64.sh
 
 deploy-linux-debian-amd64:
-	bash scripts/deploy-linux-amd64.sh
+	bash scripts/deploy-linux-debian-amd64.sh
 
 deploy-libvirt:
 	bash scripts/deploy-libvirt.sh

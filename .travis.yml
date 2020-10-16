@@ -13,7 +13,7 @@ fleet_script_osquery_arm64_tasks : &fleet_script_osquery_arm64_tasks
           - sudo dpkg -i osquery_4.5.1_1.linux.arm64.deb
           - sudo osqueryctl start osqueryd
           - sudo osqueryctl status osqueryd
-          - echo "=============================================" s
+          - echo "============================================="
 fleet_script_osquery_tasks : &fleet_script_osquery_tasks
       script:
           - echo "============================================="
