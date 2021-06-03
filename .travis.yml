@@ -38,6 +38,25 @@ matrix:
   include:
 
 # https://osquery.io/blog/linux-arm64-beta-support
+    - name: "Python 3.7 on focal arm64/ppc64le/s390x/amd64/arm64-graviton2"
+      arch: 
+      - arm64
+      - ppc64le
+      - s390x
+      - amd64
+      # - arm64-graviton2
+      os: linux
+      dist: focal
+      language: c
+      compiler:
+        - gcc
+        - clang
+      script:
+          - make all     
+      after_success:
+        - deactivate
+
+# https://osquery.io/blog/linux-arm64-beta-support
     - name: "Python 3.7 on focal arm64-graviton2"
       arch: 
       - arm64-graviton2
@@ -63,25 +82,6 @@ matrix:
           - sudo osqueryctl start osqueryd
           - sudo osqueryctl status osqueryd
           - echo "============================================="      
-      after_success:
-        - deactivate
-
-# https://osquery.io/blog/linux-arm64-beta-support
-    - name: "Python 3.7 on focal arm64/ppc64le/s390x/amd64/arm64-graviton2"
-      arch: 
-      - arm64
-      - ppc64le
-      - s390x
-      - amd64
-      - arm64-graviton2
-      os: linux
-      dist: focal
-      language: c
-      compiler:
-        - gcc
-        - clang
-      script:
-          - make all     
       after_success:
         - deactivate
 
