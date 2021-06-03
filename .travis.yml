@@ -72,6 +72,7 @@ matrix:
       - ppc64le
       - s390x
       - amd64
+      - arm64-graviton2
       os: linux
       dist: focal
       language: python
