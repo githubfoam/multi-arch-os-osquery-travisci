@@ -32,3 +32,10 @@ https://osquery.readthedocs.io/en/stable/installation/install-windows/
 https://osquery.readthedocs.io/en/stable/installation/install-freebsd/
 
 ~~~~
+
+~~~~
+Building on Multiple CPU Architectures
+https://docs.travis-ci.com/user/multi-cpu-architectures/
+The Ubuntu Linux Build Environments
+https://docs.travis-ci.com/user/reference/linux/
+~~~~
