@@ -31,6 +31,9 @@ https://osquery.readthedocs.io/en/stable/installation/install-windows/
 
 https://osquery.readthedocs.io/en/stable/installation/install-freebsd/
 
+osquery packs
+https://github.com/osquery/osquery/tree/master/packs
+
 ~~~~
 
 ~~~~
